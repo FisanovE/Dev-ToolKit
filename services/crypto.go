@@ -12,7 +12,6 @@ import (
 	"math/big"
 	"time"
 
-	// Подключаем правильный пакет от SSLMate
 	"software.sslmate.com/src/go-pkcs12"
 )
 
@@ -26,11 +25,10 @@ type CryptoResult struct {
 	PrivateKey  string `json:"privateKey,omitempty"`
 	PublicKey   string `json:"publicKey,omitempty"`
 	Certificate string `json:"certificate,omitempty"`
-	P12Base64   string `json:"p12Base64,omitempty"` // Теперь тут будет честный Base64
+	P12Base64   string `json:"p12Base64,omitempty"`
 	Info        string `json:"info,omitempty"`
 }
 
-// GenerateRSAKeyPair — без изменений
 func (s *CryptoService) GenerateRSAKeyPair() (*CryptoResult, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -49,7 +47,6 @@ func (s *CryptoService) GenerateRSAKeyPair() (*CryptoResult, error) {
 	return &CryptoResult{PrivateKey: string(privPEM), PublicKey: string(pubPEM)}, nil
 }
 
-// CreateSelfSignedCert — обновлен под SSLMate и Base64
 func (s *CryptoService) CreateSelfSignedCert(commonName string, password string) (*CryptoResult, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -86,13 +83,11 @@ func (s *CryptoService) CreateSelfSignedCert(commonName string, password string)
 		return nil, err
 	}
 
-	// Вызов Encode из библиотеки SSLMate
 	p12Bytes, err := pkcs12.Encode(rand.Reader, privateKey, parsedCert, nil, password)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка сборки P12: %v", err)
 	}
 
-	// Переводим в стандартный Base64 для безопасной отправки на фронтенд
 	p12Base64Str := base64.StdEncoding.EncodeToString(p12Bytes)
 
 	return &CryptoResult{
@@ -102,7 +97,6 @@ func (s *CryptoService) CreateSelfSignedCert(commonName string, password string)
 	}, nil
 }
 
-// ParseCertificateInfo — без изменений
 func (s *CryptoService) ParseCertificateInfo(certPEM string) (*CryptoResult, error) {
 	block, _ := pem.Decode([]byte(certPEM))
 	if block == nil || block.Type != "CERTIFICATE" {

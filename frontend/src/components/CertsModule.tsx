@@ -4,21 +4,17 @@ import { GenerateRSAKeyPair, CreateSelfSignedCert, ParseCertificateInfo } from '
 export const CertsModule: React.FC = () => {
     const [subTab, setSubTab] = useState<'rsa' | 'create-p12' | 'info'>('rsa');
     
-    // Состояния для RSA
     const [rsaPriv, setRsaPriv] = useState('');
     const [rsaPub, setRsaPub] = useState('');
 
-    // Состояния для P12 / Сертификата
     const [cn, setCn] = useState('localhost');
     const [password, setPassword] = useState('password');
     const [p12Hex, setP12Hex] = useState('');
     const [p12Cert, setP12Cert] = useState('');
 
-    // Состояния для парсинга PEM
     const [pemInput, setPemInput] = useState('');
     const [parsedInfo, setParsedInfo] = useState('');
 
-    // Вызов генерации RSA
     const handleGenRSA = async () => {
         try {
             const res = await GenerateRSAKeyPair();
@@ -29,7 +25,6 @@ export const CertsModule: React.FC = () => {
         }
     };
 
-    // Вызов создания P12
     const handleCreateP12 = async () => {
         try {
             const res = await CreateSelfSignedCert(cn, password);
@@ -42,9 +37,8 @@ export const CertsModule: React.FC = () => {
     };
 
 const downloadP12File = () => {
-    if (!p12Hex) return; // Переменная хранит Base64 строку, несмотря на старое название p12Hex
+    if (!p12Hex) return;
     
-    // Декодируем Base64 строку в бинарный массив прямо в браузере
     const binaryString = window.atob(p12Hex);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
@@ -59,7 +53,6 @@ const downloadP12File = () => {
 };
 
 
-    // Парсинг PEM
     const handleParseCert = async () => {
         try {
             const res = await ParseCertificateInfo(pemInput);
@@ -71,10 +64,6 @@ const downloadP12File = () => {
 
     return (
         <div className="module-card">
-            <h2>Криптография и Сертификаты (X.509 / P12)</h2>
-            <p className="module-description">Создание ключевых пар, генерация защищенных контейнеров и инспекция данных.</p>
-            
-            {/* Внутреннее меню переключения */}
             <div className="actions-bar" style={{ borderBottom: '1px solid #2b323f', paddingBottom: '12px', marginBottom: '20px' }}>
                 <button onClick={() => setSubTab('rsa')} className={`btn ${subTab === 'rsa' ? 'primary' : 'text-btn'}`}>Генерация RSA</button>
                 <button onClick={() => setSubTab('create-p12')} className={`btn ${subTab === 'create-p12' ? 'primary' : 'text-btn'}`}>Создать P12 & Cert</button>
@@ -98,7 +87,6 @@ const downloadP12File = () => {
                 </div>
             )}
 
-            {/* Вкладка 2: P12 / Самоподписанный */}
             {subTab === 'create-p12' && (
                 <div>
                     <div className="form-row" style={{ gridTemplateColumns: '1fr 1fr', marginBottom: '16px' }}>
@@ -127,7 +115,6 @@ const downloadP12File = () => {
                 </div>
             )}
 
-            {/* Вкладка 3: Инфо */}
             {subTab === 'info' && (
                 <div className="form-row">
                     <div className="form-group">

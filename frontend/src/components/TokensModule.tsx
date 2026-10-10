@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { GenerateAdvancedToken } from "../../wailsjs/go/services/TokenService";
 
-// Описываем структуру строки для кастомных клеймов
 interface CustomClaimItem {
   id: number;
   key: string;
@@ -9,23 +8,20 @@ interface CustomClaimItem {
 }
 
 export const TokensModule: React.FC = () => {
-  // 1. Хранилище стандартных параметров
   const [formData, setFormData] = useState({
     secret: "super-secret-key-123",
     issuer: "dev-toolkit-app",
     subject: "user-auth",
     audience: "://example.com",
-    expiresIn: 3600, // 1 час по умолчанию
+    expiresIn: 3600,
   });
 
-  // 2. Хранилище кастомных динамических полей формы
   const [customClaims, setCustomClaims] = useState<CustomClaimItem[]>([
-    { id: Date.now(), key: "role", value: "admin" }, // Одно поле для примера сразу
+    { id: Date.now(), key: "role", value: "admin" },
   ]);
 
   const [jwtResult, setJwtResult] = useState("");
 
-  // Хэндлер изменения стандартных инпутов
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -34,7 +30,6 @@ export const TokensModule: React.FC = () => {
     }));
   };
 
-  // Функции управления динамическими полями
   const addCustomField = () => {
     setCustomClaims((prev) => [
       ...prev,
@@ -56,10 +51,8 @@ export const TokensModule: React.FC = () => {
     );
   };
 
-  // Главная функция отправки данных на Go бэкенд
   const handleCreateToken = async () => {
     try {
-      // Превращаем массив [{key: 'a', value: 'b'}] в понятный для Go объект { "a": "b" }
       const customClaimsMap: { [key: string]: any } = {};
       customClaims.forEach((item) => {
         if (item.key.trim()) {
@@ -67,7 +60,6 @@ export const TokensModule: React.FC = () => {
         }
       });
 
-      // Формируем единый объект запроса под структуру Go
       const requestData = {
         secret: formData.secret,
         issuer: formData.issuer,
@@ -77,7 +69,6 @@ export const TokensModule: React.FC = () => {
         customClaims: customClaimsMap,
       };
 
-      // Отправляем объект в Go
       const token = await GenerateAdvancedToken(requestData);
       setJwtResult(token);
     } catch (err: any) {
@@ -141,8 +132,6 @@ export const TokensModule: React.FC = () => {
           />
         </div>
       </div>
-
-      {/* Блок 3: Динамические Custom Claims */}
       <h3
         style={{
           color: "var(--accent)",
@@ -153,7 +142,6 @@ export const TokensModule: React.FC = () => {
           alignItems: "center",
         }}
       >
-        {/* 3. Пользовательские Claims (Custom Payload) */}
         <button
           onClick={addCustomField}
           className="btn text-btn"

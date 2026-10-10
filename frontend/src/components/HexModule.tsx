@@ -6,6 +6,10 @@ export const HexModule: React.FC = () => {
   const [output, setOutput] = useState("");
   const [copyStatus, setCopyStatus] = useState("Copy");
 
+  const formatHexWithSpaces = (hexStr: string): string => {
+    return hexStr.match(/.{1,2}/g)?.join(" ") || hexStr;
+  };
+
   const handleEncode = async () => {
     if (!input.trim()) return;
     try {
@@ -16,10 +20,22 @@ export const HexModule: React.FC = () => {
     }
   };
 
+  const handleEncodeWithSpaces = async () => {
+    if (!input.trim()) return;
+    try {
+      const res = await Encode(input);
+      const formatted = formatHexWithSpaces(res);
+      setOutput(formatted);
+    } catch (err: any) {
+      setOutput(`Ошибка шифрования:\n${err}`);
+    }
+  };
+
   const handleDecode = async () => {
     if (!input.trim()) return;
     try {
-      const res = await Decode(input);
+      const cleanInput = input.replace(/\s+/g, "");
+      const res = await Decode(cleanInput);
       setOutput(res);
     } catch (err: any) {
       setOutput(
@@ -59,6 +75,14 @@ export const HexModule: React.FC = () => {
               Encode 🔒
             </button>
             <button
+              onClick={handleEncodeWithSpaces}
+              className="btn primary"
+              disabled={!input.trim()}
+              style={{ opacity: input.trim() ? 1 : 0.5 }}
+            >
+              Encode with spaces 🌌
+            </button>
+            <button
               onClick={handleDecode}
               className="btn success"
               disabled={!input.trim()}
@@ -69,10 +93,10 @@ export const HexModule: React.FC = () => {
             <button
               onClick={handleCopyToClipboard}
               className="btn success"
-              disabled={!input.trim()}
+              disabled={!output.trim()}
               style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
-              Copy result
+              {copyStatus}
             </button>
             <button
               onClick={handleClear}
