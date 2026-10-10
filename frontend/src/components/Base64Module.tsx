@@ -4,7 +4,7 @@ import { Encode, Decode } from "../../wailsjs/go/services/Base64Service";
 export const Base64Module: React.FC = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [copyStatus, setCopyStatus] = useState("Copy");
+  const [copyStatus, setCopyStatus] = useState("Copy result");
 
   const handleEncode = async () => {
     if (!input.trim()) return;
@@ -68,15 +68,15 @@ export const Base64Module: React.FC = () => {
             </button>
             <button
               onClick={handleCopyToClipboard}
-              className="btn success"
+              className={copyStatus === "Copied! ✓" ? "btn success" : "btn info"}
               disabled={!input.trim()}
               style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
-              Copy result
+              {copyStatus}
             </button>
             <button
               onClick={handleClear}
-              className="btn success"
+              className="btn secondary"
               disabled={!input.trim()}
               style={{ opacity: input.trim() ? 1 : 0.5 }}
             >

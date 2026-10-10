@@ -4,7 +4,7 @@ import { Encode, Decode } from "../../wailsjs/go/services/HexService";
 export const HexModule: React.FC = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [copyStatus, setCopyStatus] = useState("Copy");
+  const [copyStatus, setCopyStatus] = useState("Copy result");
 
   const formatHexWithSpaces = (hexStr: string): string => {
     return hexStr.match(/.{1,2}/g)?.join(" ") || hexStr;
@@ -76,7 +76,7 @@ export const HexModule: React.FC = () => {
             </button>
             <button
               onClick={handleEncodeWithSpaces}
-              className="btn primary"
+              className="btn secondary"
               disabled={!input.trim()}
               style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
@@ -92,7 +92,7 @@ export const HexModule: React.FC = () => {
             </button>
             <button
               onClick={handleCopyToClipboard}
-              className="btn success"
+              className= {copyStatus === "Copied! ✓" ? "btn success" : "btn info"}
               disabled={!output.trim()}
               style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
@@ -100,7 +100,7 @@ export const HexModule: React.FC = () => {
             </button>
             <button
               onClick={handleClear}
-              className="btn success"
+              className="btn secondary"
               disabled={!input.trim()}
               style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
