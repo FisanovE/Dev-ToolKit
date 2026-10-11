@@ -1,1 +1,3 @@
-build/windows/**/*.nsi linguist-documentation
+*.nsi linguist-detectable=false
+*.nsh linguist-detectable=false
+build/windows/* linguist-vendored
