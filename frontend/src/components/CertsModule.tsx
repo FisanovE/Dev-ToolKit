@@ -70,7 +70,6 @@ const downloadP12File = () => {
                 <button onClick={() => setSubTab('info')} className={`btn ${subTab === 'info' ? 'primary' : 'text-btn'}`}>Инфо о Сертификате</button>
             </div>
 
-            {/* Вкладка 1: RSA */}
             {subTab === 'rsa' && (
                 <div>
                     <button onClick={handleGenRSA} className="btn primary" style={{ marginBottom: '16px' }}>Сгенерировать пару RSA (2048 бит)</button>
