@@ -19,3 +19,7 @@
     transform: scale(1);
   }
 }
+
+.btnAction:global(.btn) {
+  /* для локального масштабирования кнопок Hex */
+}

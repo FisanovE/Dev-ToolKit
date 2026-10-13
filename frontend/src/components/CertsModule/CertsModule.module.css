@@ -1,0 +1,32 @@
+.certsActionBar {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.actionSpacing {
+  margin-bottom: 16px;
+}
+
+.btnDownloadWrapper:global(.btn),
+.btnParseWrapper:global(.btn) {
+  margin-top: 12px;
+  align-self: flex-start;
+}
+
+.p12ResultArea {
+  word-break: break-all;
+}
+
+.certsRowGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .certsRowGrid {
+    grid-template-columns: 1fr;
+  }
+}

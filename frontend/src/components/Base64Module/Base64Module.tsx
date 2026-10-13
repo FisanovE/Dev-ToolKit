@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Encode, Decode } from "../../../wailsjs/go/services/Base64Service";
+import styles from "./Base64Module.module.css";
 
 export const Base64Module: React.FC = () => {
   const [input, setInput] = useState("");
@@ -66,8 +67,12 @@ export const Base64Module: React.FC = () => {
             </button>
             <button
               onClick={handleCopyToClipboard}
-              className={copyStatus === "Copied! ✓" ? "btn success" : "btn info"}
-              disabled={!input.trim()}
+              className={
+                copyStatus === "Copied! ✓"
+                  ? `${styles.btnCopySuccess} btn success`
+                  : `${styles.btnCopyInfo} btn info`
+              }
+              disabled={!output.trim()}
             >
               {copyStatus}
             </button>

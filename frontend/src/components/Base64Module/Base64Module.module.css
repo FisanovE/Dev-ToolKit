@@ -1,0 +1,21 @@
+.btnCopyInfo:global(.btn):global(.info) {
+  transition:
+    background-color 0.2s ease-in-out,
+    transform 0.1s ease;
+}
+
+.btnCopySuccess:global(.btn):global(.success) {
+  animation: pulse 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
