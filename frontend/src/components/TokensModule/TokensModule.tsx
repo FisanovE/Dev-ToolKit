@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { GenerateAdvancedToken } from "../../wailsjs/go/services/TokenService";
+import { GenerateAdvancedToken } from "../../../wailsjs/go/services/TokenService";
+import styles from './TokensModule.module.css';
 
 interface CustomClaimItem {
   id: number;
@@ -9,15 +10,15 @@ interface CustomClaimItem {
 
 export const TokensModule: React.FC = () => {
   const [formData, setFormData] = useState({
-    secret: "super-secret-key-123",
-    issuer: "dev-toolkit-app",
-    subject: "user-auth",
-    audience: "://example.com",
+    secret: "",
+    issuer: "",
+    subject: "",
+    audience: "",
     expiresIn: 3600,
   });
 
   const [customClaims, setCustomClaims] = useState<CustomClaimItem[]>([
-    { id: Date.now(), key: "role", value: "admin" },
+    { id: Date.now(), key: "", value: "" },
   ]);
 
   const [jwtResult, setJwtResult] = useState("");
@@ -77,55 +78,60 @@ export const TokensModule: React.FC = () => {
   };
 
   return (
-    <div className="module-card" style={{ maxWidth: "950px" }}>
+    <div className={`${styles.card} module-card`}>
       <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-        <div className="form-grid-row">
+        <div className={styles.gridRow}>
           <label htmlFor="pwd-input">Pass</label>
           <input
             id="pwd-input"
+            placeholder="password (example: super-secret-key-123)"
             type="text"
-            className="custom-input"
+            className={styles.input}
             name="secret"
             value={formData.secret}
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-grid-row">
+        <div className={styles.gridRow}>
           <label htmlFor="exp-input">exp</label>
           <input
             id="exp-input"
+            placeholder="expiresIn (example: 3600)"
             type="number"
-            className="custom-input"
+            className={styles.input}
             name="expiresIn"
             value={formData.expiresIn}
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-grid-row">
+        <div className={styles.gridRow}>
           <label>iss</label>
           <input
             type="text"
-            className="custom-input"
+            placeholder="issuer (example: Company LTD)"
+            className={styles.input}
             name="issuer"
             value={formData.issuer}
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-grid-row">
+        <div className={styles.gridRow}>
           <label>sub</label>
           <input
             type="text"
-            className="custom-input"
+            placeholder="subject (example: Finance dept)"
+            className={styles.input}
             name="subject"
             value={formData.subject}
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-grid-row">
+        <div className={styles.gridRow}>
           <label>aud</label>
           <input
             type="text"
-            className="custom-input"
+            placeholder="audience (example: http://company.com)"
+            className={styles.input}
             name="audience"
             value={formData.audience}
             onChange={handleInputChange}
@@ -166,7 +172,8 @@ export const TokensModule: React.FC = () => {
           >
             <input
               type="text"
-              className="custom-input"
+              className={styles.input}
+              style={{ flex: 1 }}
               placeholder="Key (example: user_id)"
               value={item.key}
               onChange={(e) =>
@@ -175,7 +182,8 @@ export const TokensModule: React.FC = () => {
             />
             <input
               type="text"
-              className="custom-input"
+              className={styles.input}
+              style={{ flex: 3 }}
               placeholder="Value (example: 42)"
               value={item.value}
               onChange={(e) =>
@@ -184,8 +192,7 @@ export const TokensModule: React.FC = () => {
             />
             <button
               onClick={() => removeCustomField(item.id)}
-              className="btn text-btn"
-              style={{ color: "#ef4444" }}
+              className={`${styles.btnDel} btn text-btn`}
             >
               Delete
             </button>
@@ -206,8 +213,7 @@ export const TokensModule: React.FC = () => {
 
       <button
         onClick={handleCreateToken}
-        className="btn primary"
-        style={{ width: "100%", justifyContent: "center", padding: "14px" }}
+        className={`${styles.btnExec} btn primary`}
       >
         Generate Token 🚀
       </button>

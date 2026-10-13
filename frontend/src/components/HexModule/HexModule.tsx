@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { Encode, Decode } from "../../wailsjs/go/services/Base64Service";
+import { Encode, Decode } from "../../../wailsjs/go/services/HexService";
+import styles from "./HexModule.module.css";
 
-export const Base64Module: React.FC = () => {
+export const HexModule: React.FC = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [copyStatus, setCopyStatus] = useState("Copy result");
+
+  const formatHexWithSpaces = (hexStr: string): string => {
+    return hexStr.match(/.{1,2}/g)?.join(" ") || hexStr;
+  };
 
   const handleEncode = async () => {
     if (!input.trim()) return;
@@ -16,14 +21,26 @@ export const Base64Module: React.FC = () => {
     }
   };
 
+  const handleEncodeWithSpaces = async () => {
+    if (!input.trim()) return;
+    try {
+      const res = await Encode(input);
+      const formatted = formatHexWithSpaces(res);
+      setOutput(formatted);
+    } catch (err: any) {
+      setOutput(`Ошибка шифрования:\n${err}`);
+    }
+  };
+
   const handleDecode = async () => {
     if (!input.trim()) return;
     try {
-      const res = await Decode(input);
+      const cleanInput = input.replace(/\s+/g, "");
+      const res = await Decode(cleanInput);
       setOutput(res);
     } catch (err: any) {
       setOutput(
-        `Ошибка дешифрования:\nПроверьте, что строка является валидным Base64.\n\nДетали: ${err}`,
+        `Ошибка дешифрования:\nПроверьте, что строка является валидным Hex.\n\nДетали: ${err}`,
       );
     }
   };
@@ -48,44 +65,51 @@ export const Base64Module: React.FC = () => {
     <div className="module-card">
       <div className="form-group">
         <div className="label-container">
-          <label htmlFor="b64-input">Input</label>
+          <label htmlFor="hex-input">Input</label>
           <div className="actions-bar">
             <button
               onClick={handleEncode}
-              className="btn primary"
+              className={`${styles.btnAction} btn primary`}
               disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
               Encode 🔒
             </button>
             <button
-              onClick={handleDecode}
-              className="btn success"
+              onClick={handleEncodeWithSpaces}
+              className={`${styles.btnAction} btn secondary`}
               disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
+            >
+              Encode with spaces 🌌
+            </button>
+            <button
+              onClick={handleDecode}
+              className={`${styles.btnAction} btn success`}
+              disabled={!input.trim()}
             >
               Decode 🔓
             </button>
             <button
               onClick={handleCopyToClipboard}
-              className={copyStatus === "Copied! ✓" ? "btn success" : "btn info"}
-              disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
+              className={
+                copyStatus === "Copied! ✓"
+                  ? `${styles.btnCopySuccess} btn success`
+                  : `${styles.btnCopyInfo} btn info`
+              }
+              disabled={!output.trim()}
             >
               {copyStatus}
             </button>
             <button
               onClick={handleClear}
-              className="btn secondary"
+              className={`${styles.btnAction} btn secondary`}
               disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
               Clear ✕
             </button>
           </div>
         </div>
         <textarea
-          id="b64-input"
+          id="hex-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Введите строку или текст для обработки..."
@@ -94,10 +118,10 @@ export const Base64Module: React.FC = () => {
 
       <div className="form-group">
         <div className="label-container">
-          <label htmlFor="b64-output">Result</label>
+          <label htmlFor="hex-output">Result</label>
         </div>
         <textarea
-          id="b64-output"
+          id="hex-output"
           value={output}
           readOnly
           placeholder="Результат выполнения операции отобразится здесь..."

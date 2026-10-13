@@ -25,21 +25,27 @@ type JWTRequest struct {
 
 func (s *TokenService) GenerateAdvancedToken(req JWTRequest) (string, error) {
 	if req.Secret == "" {
-		return "", fmt.Errorf("секретный ключ обязателен")
+		return "", fmt.Errorf("Pass обязателен")
 	}
 
 	claims := jwt.MapClaims{}
 
 	if req.Issuer != "" {
 		claims["iss"] = req.Issuer
+	} else {
+		return "", fmt.Errorf("iss обязателен")
 	}
 
 	if req.Subject != "" {
 		claims["sub"] = req.Subject
+	} else {
+		return "", fmt.Errorf("sub обязателен")
 	}
 
 	if req.Audience != "" {
 		claims["aud"] = req.Audience
+	} else {
+		return "", fmt.Errorf("aud обязателен")
 	}
 
 	now := time.Now()
@@ -47,6 +53,8 @@ func (s *TokenService) GenerateAdvancedToken(req JWTRequest) (string, error) {
 
 	if req.ExpiresIn > 0 {
 		claims["exp"] = now.Add(time.Duration(req.ExpiresIn) * time.Second).Unix()
+	} else {
+		return "", fmt.Errorf("exp должен быть больше 0")
 	}
 
 	if req.NotBefore > 0 {

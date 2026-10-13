@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Base64Module } from './components/Base64Module';
-import { HexModule } from './components/HexModule';
-import { CertsModule } from './components/CertsModule';
-import { TokensModule } from './components/TokensModule';
+import { Base64Module } from './components/Base64Module/Base64Module';
+import { HexModule } from './components/HexModule/HexModule';
+import { CertsModule } from './components/CertsModule/CertsModule';
+import { TokensModule } from './components/TokensModule/TokensModule';
 
 import './App.css';
 
@@ -32,7 +32,7 @@ function App() {
                         className={activeTab === 'tokens' ? 'active' : ''} 
                         onClick={() => setActiveTab('tokens')}
                     >
-                        JWT/JWS/JWE
+                        JWT
                     </li>
                     <li 
                         className={activeTab === 'certs' ? 'active' : ''} 

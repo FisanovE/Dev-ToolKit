@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { Encode, Decode } from "../../wailsjs/go/services/HexService";
+import { Encode, Decode } from "../../../wailsjs/go/services/Base64Service";
 
-export const HexModule: React.FC = () => {
+export const Base64Module: React.FC = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [copyStatus, setCopyStatus] = useState("Copy result");
-
-  const formatHexWithSpaces = (hexStr: string): string => {
-    return hexStr.match(/.{1,2}/g)?.join(" ") || hexStr;
-  };
 
   const handleEncode = async () => {
     if (!input.trim()) return;
@@ -20,26 +16,14 @@ export const HexModule: React.FC = () => {
     }
   };
 
-  const handleEncodeWithSpaces = async () => {
-    if (!input.trim()) return;
-    try {
-      const res = await Encode(input);
-      const formatted = formatHexWithSpaces(res);
-      setOutput(formatted);
-    } catch (err: any) {
-      setOutput(`Ошибка шифрования:\n${err}`);
-    }
-  };
-
   const handleDecode = async () => {
     if (!input.trim()) return;
     try {
-      const cleanInput = input.replace(/\s+/g, "");
-      const res = await Decode(cleanInput);
+      const res = await Decode(input);
       setOutput(res);
     } catch (err: any) {
       setOutput(
-        `Ошибка дешифрования:\nПроверьте, что строка является валидным Hex.\n\nДетали: ${err}`,
+        `Ошибка дешифрования:\nПроверьте, что строка является валидным Base64.\n\nДетали: ${err}`,
       );
     }
   };
@@ -70,31 +54,20 @@ export const HexModule: React.FC = () => {
               onClick={handleEncode}
               className="btn primary"
               disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
               Encode 🔒
-            </button>
-            <button
-              onClick={handleEncodeWithSpaces}
-              className="btn secondary"
-              disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
-            >
-              Encode with spaces 🌌
             </button>
             <button
               onClick={handleDecode}
               className="btn success"
               disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
               Decode 🔓
             </button>
             <button
               onClick={handleCopyToClipboard}
-              className= {copyStatus === "Copied! ✓" ? "btn success" : "btn info"}
-              disabled={!output.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
+              className={copyStatus === "Copied! ✓" ? "btn success" : "btn info"}
+              disabled={!input.trim()}
             >
               {copyStatus}
             </button>
@@ -102,7 +75,6 @@ export const HexModule: React.FC = () => {
               onClick={handleClear}
               className="btn secondary"
               disabled={!input.trim()}
-              style={{ opacity: input.trim() ? 1 : 0.5 }}
             >
               Clear ✕
             </button>

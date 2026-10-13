@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GenerateRSAKeyPair, CreateSelfSignedCert, ParseCertificateInfo } from '../../wailsjs/go/services/CryptoService';
+import { GenerateRSAKeyPair, CreateSelfSignedCert, ParseCertificateInfo } from '../../../wailsjs/go/services/CryptoService';
 
 export const CertsModule: React.FC = () => {
     const [subTab, setSubTab] = useState<'rsa' | 'create-p12' | 'info'>('rsa');
