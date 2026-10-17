@@ -19,18 +19,68 @@
   --danger: #d8625a;
   --danger-hover: color-mix(in srgb, var(--danger), black 20%);
   --accent: #8b5cf6;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-round: 50%;
+  --radius-max: 9999px;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+
+  --textarea-height-sm: 120px;
+  --textarea-height: 180px;
+  --textarea-padding-y: var(--space-md);
+  --textarea-padding-x: var(--space-md);
+
+  --sidebar-width: 150px;
+  --sidebar-gap: var(--space-sm);
+
+  --card-padding: var(--space-lg);
+  --card-radius: var(--radius-md);
+  --card-header-padding: var(--space-lg);
+  --card-content-padding: var(--space-xl);
+  --card-margin-top: var(--space-xl);
+
+  --btn-height: 36px;
+  --btn-padding-y: var(--space-sm);
+  --btn-padding-x: var(--space-md);
+  --btn-border-radius: var(--radius-sm);
+  --btn-font-size: 0.9rem;
+  --btn-font-weight: 600;
+
+  --input-height: 40px;
+  --input-padding-y: var(--space-sm);
+  --input-padding-x: var(--space-md);
+
+  --grid-gap: var(--space-xl);
+
+  --list-item-gap: var(--space-sm);
+
+  --label-margin-bottom: var(--space-sm);
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--bg-app);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -53,7 +103,7 @@ html, body {
 }
 
 .sidebar h3 {
-  margin: 0 0 28px 0;
+  margin: 0 0 var(--space-xl) 0;
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -67,12 +117,12 @@ html, body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--list-item-gap);
   width: 100%;
 }
 
 .sidebar li {
-  padding: 12px 16px;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
   cursor: pointer;
   font-weight: 500;
   font-size: 0.95rem;
@@ -103,12 +153,12 @@ html, body {
 .sidebar li:not(.active):hover {
   background-color: #202530;
   color: var(--text-main);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); 
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .content {
   flex: 1;
-  padding: 40px;
+  padding: var(--space-3xl);
   overflow-y: auto;
   box-sizing: border-box;
   background-color: var(--bg-app);
@@ -117,8 +167,9 @@ html, body {
 .module-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 6px 32px 32px 32px;
+  border-radius: var(--radius-lg);
+  /* padding: 6px 32px 32px 32px; */
+  padding: var(--card-padding);
   min-width: 800px;
   max-width: 1500px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
@@ -127,12 +178,14 @@ html, body {
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 24px;
+  gap: var(--grid-gap);
+  margin-bottom: var(--space-2xl);
 }
 
 @media (max-width: 768px) {
-  .form-row { grid-template-columns: 1fr; }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-group {
@@ -144,10 +197,10 @@ html, body {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 8px;
-  margin-top: 8px;
+  margin-bottom: var(--space-md);
+  margin-top: var(--space-md);
   width: 100%;
-  gap: 12px;
+  gap: var(--space-md);
 }
 
 .form-group label {
@@ -160,12 +213,12 @@ html, body {
 
 textarea {
   width: 100%;
-  height: 180px;
+  height: var(--textarea-height);
   background-color: var(--bg-input);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: #ffffff;
-  padding: 14px;
+  padding: var(--space-md);
   box-sizing: border-box;
   resize: none;
   font-family: "Fira Code", "Courier New", Courier, monospace;
@@ -182,7 +235,7 @@ textarea:focus {
 .custom-input {
   background-color: var(--bg-input);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: #ffffff;
   padding: 10px 14px;
   font-size: 0.95rem;
@@ -204,17 +257,18 @@ textarea:focus {
 
 .btn {
   width: 135px;
+  /* height: var(--btn-height); */
   justify-content: center;
-  padding: 11px 16px;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.9rem;
+  border-radius: var(--btn-border-radius);
+  font-weight: var(--btn-font-weight);
+  font-size: var(--btn-font-size);
   cursor: pointer;
   transition: all 0.15s ease-in-out;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .btn:disabled {
@@ -222,27 +276,52 @@ textarea:focus {
   cursor: not-allowed;
 }
 
-.btn.primary { background-color: var(--primary); color: white; }
-.btn.primary:hover { background-color: var(--primary-hover); }
+.btn.primary {
+  background-color: var(--primary);
+  color: white;
+}
+.btn.primary:hover {
+  background-color: var(--primary-hover);
+}
 
-.btn.secondary { background-color: var(--secondary); color: white; }
-.btn.secondary:hover { background-color: var(--secondary-hover); }
+.btn.secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+.btn.secondary:hover {
+  background-color: var(--secondary-hover);
+}
 
-.btn.info { background-color: var(--info); color: white; }
-.btn.info:hover { background-color: var(--info-hover); }
+.btn.info {
+  background-color: var(--info);
+  color: white;
+}
+.btn.info:hover {
+  background-color: var(--info-hover);
+}
 
-.btn.success { background-color: var(--success); color: white; }
-.btn.success:hover { background-color: var(--success-hover); }
+.btn.success {
+  background-color: var(--success);
+  color: white;
+}
+.btn.success:hover {
+  background-color: var(--success-hover);
+}
 
-.btn.danger { background-color: var(--danger); color: white; }
-.btn.danger:hover { background-color: var(--danger-hover); }
+.btn.danger {
+  background-color: var(--danger);
+  color: white;
+}
+.btn.danger:hover {
+  background-color: var(--danger-hover);
+}
 
 .btn.text-btn {
   background: transparent;
   color: var(--text-muted);
-  padding: 4px 8px;
+  padding: var(--space-xs) var(--space-sm);
   font-size: 0.8rem;
-  border-radius: 4px;
+  border-radius: var(--btn-border-radius);
 }
 .btn.text-btn:hover {
   background-color: rgba(255, 255, 255, 0.05);

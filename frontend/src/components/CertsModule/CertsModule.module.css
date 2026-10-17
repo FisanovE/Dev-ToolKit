@@ -1,11 +1,11 @@
 .certsActionBar {
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-xl);
 }
 
 .actionSpacing {
-  margin-bottom: 16px;
+  margin-bottom: var(--space-lg);
 }
 
 .btnDownloadWrapper:global(.btn),
@@ -21,8 +21,8 @@
 .certsRowGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 16px;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-lg);
 }
 
 @media (max-width: 768px) {
