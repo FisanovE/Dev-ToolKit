@@ -144,7 +144,7 @@ export const CertsModule: React.FC = () => {
           </div>
           <button
             onClick={handleCreateP12}
-            className={`btn success $ {styles.actionSpacing}`}
+            className={`btn success ${styles.actionSpacing}`}
           >
             Создать Сертификат
           </button>
