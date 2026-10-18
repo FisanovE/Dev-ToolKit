@@ -1,0 +1,171 @@
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.selectCard {
+  background-color: var(--bg-input);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.selectCard:hover {
+  border-color: var(--primary);
+  background-color: rgba(124, 72, 220, 0.02);
+}
+
+.selectCard.selected {
+  border-color: var(--primary);
+  background-color: rgba(124, 72, 220, 0.05);
+  box-shadow: 0 0 12px rgba(124, 72, 220, 0.2);
+}
+
+.cardIcon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.stepperHeader {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.activeStep {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.centerBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorIcon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.errorMessage {
+  background-color: rgba(216, 98, 90, 0.05);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 14px;
+  border-radius: 6px;
+  font-family: monospace;
+  max-width: 600px;
+  margin-bottom: 24px;
+  word-break: break-all;
+}
+
+.binaryResultCard {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 550px;
+  margin: 20px auto;
+}
+
+.binaryIcon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+}
+
+.binaryMeta {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.codeTextarea {
+  font-family: "Fira Code", "Courier New", monospace !important;
+  font-size: 0.82rem !important;
+  line-height: 1.4 !important;
+  background-color: #090a0d !important;
+}
+
+.labelFixed {
+  justify-self: start !important;
+  text-align: left !important;
+  width: 100%;
+}
+
+.stepWrapper {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selectCard.cardDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: var(--border-color) !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  position: relative;
+}
+
+.selectCard.cardDisabled:hover {
+  border-color: var(--border-color) !important;
+}
+
+.disabledBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(218, 98, 90, 0.15);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}

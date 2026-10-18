@@ -1,22 +1,15 @@
 import React, { useState } from "react";
 import {
   GenerateRSAKeyPair,
-  CreateSelfSignedCert,
   ParseCertificateInfo,
 } from "../../../wailsjs/go/services/CryptoService";
+import { CreateWizard } from "./CreateWizard/CreateWizard";
 import styles from "./CertsModule.module.css";
 
 export const CertsModule: React.FC = () => {
   const [subTab, setSubTab] = useState<"rsa" | "create-p12" | "info">("rsa");
-
   const [rsaPriv, setRsaPriv] = useState("");
   const [rsaPub, setRsaPub] = useState("");
-
-  const [cn, setCn] = useState("localhost");
-  const [password, setPassword] = useState("password");
-  const [p12Hex, setP12Hex] = useState("");
-  const [p12Cert, setP12Cert] = useState("");
-
   const [pemInput, setPemInput] = useState("");
   const [parsedInfo, setParsedInfo] = useState("");
 
@@ -28,33 +21,6 @@ export const CertsModule: React.FC = () => {
     } catch (err) {
       alert(`Ошибка: ${err}`);
     }
-  };
-
-  const handleCreateP12 = async () => {
-    try {
-      const res = await CreateSelfSignedCert(cn, password);
-      setP12Cert(res.certificate || "");
-      setP12Hex(res.p12Base64 || "");
-      alert("Сертификат и контейнер P12 успешно сгенерированы!");
-    } catch (err) {
-      alert(`Ошибка: ${err}`);
-    }
-  };
-
-  const downloadP12File = () => {
-    if (!p12Hex) return;
-
-    const binaryString = window.atob(p12Hex);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-
-    const blob = new Blob([bytes], { type: "application/x-pkcs12" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${cn || "cert"}.p12`;
-    link.click();
   };
 
   const handleParseCert = async () => {
@@ -79,7 +45,7 @@ export const CertsModule: React.FC = () => {
           onClick={() => setSubTab("create-p12")}
           className={`btn ${subTab === "create-p12" ? "primary" : "text-btn"}`}
         >
-          Создать P12 & Cert
+          Создать SSL-Сертификат 🛠️
         </button>
         <button
           onClick={() => setSubTab("info")}
@@ -120,51 +86,7 @@ export const CertsModule: React.FC = () => {
         </div>
       )}
 
-      {subTab === "create-p12" && (
-        <div>
-          <div className={styles.certsRowGrid}>
-            <div className="form-group">
-              <label>Common Name (CN / Домен)</label>
-              <input
-                type="text"
-                className="custom-input"
-                value={cn}
-                onChange={(e) => setCn(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Пароль для контейнера P12</label>
-              <input
-                type="password"
-                className="custom-input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-          <button
-            onClick={handleCreateP12}
-            className={`btn success ${styles.actionSpacing}`}
-          >
-            Создать Сертификат
-          </button>
-
-          {p12Cert && (
-            <div className="form-group">
-              <label>Созданный PEM Сертификат</label>
-              <textarea value={p12Cert} readOnly rows={6} />
-              {p12Hex && (
-                <button
-                  onClick={downloadP12File}
-                  className={`btn primary ${styles.btnDownloadWrapper}`}
-                >
-                  Скачать готовый .p12 файл 📥
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+      {subTab === "create-p12" && <CreateWizard />}
 
       {subTab === "info" && (
         <div className="form-row">
