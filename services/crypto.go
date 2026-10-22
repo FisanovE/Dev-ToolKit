@@ -21,6 +21,27 @@ func NewCryptoService() *CryptoService {
 	return &CryptoService{}
 }
 
+type RequestData struct {
+	TrustType             string   `json:"trustType"`
+	Format                string   `json:"format"`
+	Password              string   `json:"password"`
+	Organization          []string `json:"organization"`
+	OrganizationalUnit    []string `json:"organizationalUnit"`
+	Country               []string `json:"country"`
+	Locality              []string `json:"locality"`
+	Province              []string `json:"province"`
+	StreetAddress         []string `json:"streetAddress"`
+	PostalCode            []string `json:"postalCode"`
+	CommonName            string   `json:"commonName"`
+	NotBefore             int64    `json:"notBefore"`
+	NotAfter              int64    `json:"notAfter"`
+	KeyUsage              int64    `json:"keyUsage"`
+	ExtKeyUsage           int      `json:"extKeyUsage"`
+	BasicConstraintsValid int      `json:"basicConstraintsValid"`
+	DNSNames              int      `json:"dnsNames"`
+	IPAddresses           int      `json:"ipAddresses"`
+}
+
 type CryptoResult struct {
 	PrivateKey  string `json:"privateKey,omitempty"`
 	PublicKey   string `json:"publicKey,omitempty"`
@@ -47,7 +68,34 @@ func (s *CryptoService) GenerateRSAKeyPair() (*CryptoResult, error) {
 	return &CryptoResult{PrivateKey: string(privPEM), PublicKey: string(pubPEM)}, nil
 }
 
-func (s *CryptoService) CreateSelfSignedCert(commonName string, password string) (*CryptoResult, error) {
+func (c *CryptoService) GenerateCertificate(req RequestData) (CryptoResult, error) {
+	// 1. Здесь вы можете читать поля: req.CommonName, req.TrustType и т.д.
+	if req.CommonName == "" {
+		return CryptoResult{}, fmt.Errorf("поле Common Name обязательно для заполнения")
+	}
+
+	// 2. Логика ветвления на основе полученных флагов
+	switch req.TrustType {
+	case "self_signed":
+		// Вызываем генерацию самоподписного сертификата...
+		result, err := createSelfSignedCert(req)
+		if err != nil {
+			return CryptoResult{}, err
+		}
+		return *result, nil
+	case "ca_csr":
+		// Вызываем генерацию приватного ключа + CSR запроса...
+
+	}
+
+	// 3. Возвращаем заполненный контейнер результатов
+	return CryptoResult{
+		Certificate: "-----BEGIN CERTIFICATE-----\n...",
+		P12Base64:   "ey...",
+	}, nil
+}
+
+func createSelfSignedCert(req RequestData) (*CryptoResult, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
@@ -57,11 +105,17 @@ func (s *CryptoService) CreateSelfSignedCert(commonName string, password string)
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
-			CommonName:   commonName,
-			Organization: []string{"Dev-Toolkit Auto-Generated"},
+			Organization:       req.Organization,
+			OrganizationalUnit: req.OrganizationalUnit,
+			Country:            req.Country,
+			Locality:           req.Locality,
+			Province:           req.Province,
+			StreetAddress:      req.StreetAddress,
+			PostalCode:         req.PostalCode,
+			CommonName:         req.CommonName,
 		},
-		NotBefore:             time.Now(),
-		NotAfter:              time.Now().AddDate(1, 0, 0),
+		NotBefore:             time.Unix(req.NotBefore, 0),
+		NotAfter:              time.Unix(req.NotAfter, 0),
 		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 		BasicConstraintsValid: true,
@@ -83,7 +137,7 @@ func (s *CryptoService) CreateSelfSignedCert(commonName string, password string)
 		return nil, err
 	}
 
-	p12Bytes, err := pkcs12.Encode(rand.Reader, privateKey, parsedCert, nil, password)
+	p12Bytes, err := pkcs12.Legacy.Encode(privateKey, parsedCert, nil, req.Password)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка сборки P12: %v", err)
 	}
