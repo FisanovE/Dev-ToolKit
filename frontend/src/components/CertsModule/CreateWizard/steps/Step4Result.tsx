@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TrustType, OutputFormat, WizardState } from "../CreateWizard";
-import { CreateSelfSignedCert } from "../../../../../wailsjs/go/services/CryptoService";
+import { GenerateCertificate } from "../../../../../wailsjs/go/services/CryptoService";
 import styles from "../CreateWizard.module.css";
 
 interface Step4Props {
@@ -15,11 +15,34 @@ interface GeneratedArtifacts {
   p12Base64?: string;
 }
 
-export const Step4Result: React.FC<Step4Props> = ({ data, onReset }) => {
+export const Step4Result: React.FC<Step4Props> = ({data, onReset }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [artifacts, setArtifacts] = useState<GeneratedArtifacts | null>(null);
   const [copyStates, setCopyStates] = useState<{ [key: string]: boolean }>({});
+  const notBeforeUnix = data.notBeforeStr ? Math.floor(Date.parse(data.notBeforeStr) / 1000) : 0;
+  const notAfterUnix = data.notAfterStr ? Math.floor(Date.parse(data.notAfterStr) / 1000) : 0;
+
+const requestPayload = {
+  trustType: data.trustType || "",
+  format: data.format || "",
+  password: data.password || "",
+  commonName: data.commonName,
+  organization: data.organization ? [data.organization] : [],
+	organizationalUnit: data.organizationalUnit ? [data.organizationalUnit] : [],
+	country: data.country ? [data.country] : [],
+	locality: data.locality ? [data.locality] : [],
+	province: data.province ? [data.province] : [],
+	streetAddress: data.streetAddress ? [data.streetAddress] : [],
+	postalCode: data.postalCode ? [data.postalCode] : [],
+  notBefore: notBeforeUnix,
+  notAfter: notAfterUnix,
+	keyUsage: data.keyUsage ? data.keyUsage : 0,
+	extKeyUsage: data.extKeyUsage ? data.extKeyUsage : 0,
+	basicConstraintsValid: data.basicConstraintsValid ? data.basicConstraintsValid : 0,
+	dnsNames: data.dnsNames ? data.dnsNames : 0,
+	ipAddresses: data.ipAddresses ? data.ipAddresses : 0,
+};
 
   useEffect(() => {
     const processGeneration = async () => {
@@ -28,16 +51,13 @@ export const Step4Result: React.FC<Step4Props> = ({ data, onReset }) => {
         setError(null);
 
         if (data.trustType === "self_signed" && data.format === "p12") {
-          const res = await CreateSelfSignedCert(
-            data.commonName,
-            data.password || "",
-          );
+          const res = await GenerateCertificate(requestPayload);
           setArtifacts({
             certificate: res.certificate,
             p12Base64: res.p12Base64,
           });
         } else if (data.trustType === "self_signed" && data.format === "pem") {
-          const res = await CreateSelfSignedCert(data.commonName, "");
+          const res = await GenerateCertificate(requestPayload);
           setArtifacts({
             privateKey: "-----BEGIN PRIVATE KEY-----\nMIIE...",
             certificate: res.certificate,

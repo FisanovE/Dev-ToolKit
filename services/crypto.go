@@ -69,15 +69,12 @@ func (s *CryptoService) GenerateRSAKeyPair() (*CryptoResult, error) {
 }
 
 func (c *CryptoService) GenerateCertificate(req RequestData) (CryptoResult, error) {
-	// 1. Здесь вы можете читать поля: req.CommonName, req.TrustType и т.д.
 	if req.CommonName == "" {
 		return CryptoResult{}, fmt.Errorf("поле Common Name обязательно для заполнения")
 	}
 
-	// 2. Логика ветвления на основе полученных флагов
 	switch req.TrustType {
 	case "self_signed":
-		// Вызываем генерацию самоподписного сертификата...
 		result, err := createSelfSignedCert(req)
 		if err != nil {
 			return CryptoResult{}, err
@@ -88,7 +85,6 @@ func (c *CryptoService) GenerateCertificate(req RequestData) (CryptoResult, erro
 
 	}
 
-	// 3. Возвращаем заполненный контейнер результатов
 	return CryptoResult{
 		Certificate: "-----BEGIN CERTIFICATE-----\n...",
 		P12Base64:   "ey...",

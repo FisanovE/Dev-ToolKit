@@ -15,9 +15,9 @@ export const Step2Metadata: React.FC<Step2Props> = ({
   onNext,
   onBack,
 }) => {
-  const isInvalid = !data.commonName.trim();
+  const isInvalid = !data.commonName.trim() || !data.notBeforeStr || !data.notAfterStr;
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onChange({ [name]: value });
   };
@@ -42,7 +42,7 @@ export const Step2Metadata: React.FC<Step2Props> = ({
             className="custom-input"
             placeholder="example: localhost или *.yourdomain.com"
             value={data.commonName}
-            onChange={handleTextChange}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -57,7 +57,7 @@ export const Step2Metadata: React.FC<Step2Props> = ({
             className="custom-input"
             placeholder="example: MyCompany LLC"
             value={data.organization}
-            onChange={handleTextChange}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -73,11 +73,35 @@ export const Step2Metadata: React.FC<Step2Props> = ({
               className="custom-input"
               placeholder="Пароль для защиты контейнера PKCS#12"
               value={data.password || ""}
-              onChange={handleTextChange}
+              onChange={handleInputChange}
             />
           </div>
         )}
       </div>
+
+        <div className="form-grid-row">
+          <label htmlFor="not-before-input" className={styles.labelFixed}>Действует с</label>
+          <input
+            id="not-before-input"
+            type="datetime-local"
+            name="notBeforeStr"
+            className="custom-input"
+            value={data.notBeforeStr || ""}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="form-grid-row">
+          <label htmlFor="not-after-input" className={styles.labelFixed}>Действует до</label>
+          <input
+            id="not-after-input"
+            type="datetime-local"
+            name="notAfterStr"
+            className="custom-input"
+            value={data.notAfterStr || ""}
+            onChange={handleInputChange}
+          />
+        </div>
 
       <div
         className="actions-bar"

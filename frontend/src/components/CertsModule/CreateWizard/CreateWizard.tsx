@@ -10,20 +10,55 @@ export type OutputFormat = "pem" | "p12";
 
 export interface WizardState {
   trustType: TrustType | null;
-  commonName: string;
-  organization: string;
-  password?: string;
   format: OutputFormat | null;
+	password: string;
+	organization: string;
+	organizationalUnit: string;
+	country: string;
+	locality: string;
+	province: string;
+	streetAddress: string;
+	postalCode: string;
+	commonName: string;
+	notBeforeStr: string;
+	notAfterStr: string;
+	keyUsage: number;
+	extKeyUsage: number;
+	basicConstraintsValid: number;
+	dnsNames: number;
+	ipAddresses: number;
 }
+
+const now = new Date();
+const nextYear = new Date();
+nextYear.setFullYear(now.getFullYear() + 1);
+
+const toDatetimeLocalString = (date: Date) => {
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+};
 
 export const CreateWizard: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const [wizardData, setWizardData] = useState<WizardState>({
-    trustType: null,
-    commonName: "localhost",
-    organization: "",
-    password: "password",
-    format: null,
+  trustType: null,
+  format: null,
+	password: "",
+	organization: "",
+	organizationalUnit: "",
+	country: "",
+	locality: "",
+	province: "",
+	streetAddress: "",
+	postalCode: "",
+	commonName: "",
+	notBeforeStr: toDatetimeLocalString(now),
+	notAfterStr: toDatetimeLocalString(nextYear),
+	keyUsage: 0,
+	extKeyUsage: 0,
+	basicConstraintsValid: 0,
+	dnsNames: 0,
+	ipAddresses: 0,
   });
 
   const updateData = (fields: Partial<WizardState>) => {
